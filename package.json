@@ -1,12 +1,12 @@
 {
   "name": "@khromkov/mock-ws",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "mock websocket",
   "main": "dist/index.js",
-  "homepage": "https://github.com/khromkov/rws",
-  "bugs": "https://github.com/khromkov/rws/issues",
+  "homepage": "https://github.com/khromkov/mock-ws",
+  "bugs": "https://github.com/khromkov/mock-ws/issues",
   "repository": {
-    "url": "https://github.com/khromkov/rws",
+    "url": "https://github.com/khromkov/mock-ws",
     "type": "git"
   },
   "files": [
@@ -18,8 +18,8 @@
     "build:dev": "NODE_ENV=development node ./node_modules/webpack/bin/webpack --config webpack.config.babel.js -p --progress --colors",
     "build:stats": "NODE_ENV=production node ./node_modules/webpack/bin/webpack --json > stats.json",
     "test": "./node_modules/.bin/jest",
-    "test:watch": "yarn run test -- --watch",
-    "test:coverage": "yarn run test -- --coverage",
+    "test:watch": "yarn run test --watch",
+    "test:coverage": "yarn run test --coverage",
     "clean": "rimraf dist",
     "prepublish": "yarn run clean && yarn run build && yarn test",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
