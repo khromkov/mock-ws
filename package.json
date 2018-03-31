@@ -1,6 +1,6 @@
 {
   "name": "@khromkov/mock-ws",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.1",
   "description": "mock websocket",
   "main": "dist/index.js",
   "homepage": "https://github.com/khromkov/mock-ws",
