@@ -7,6 +7,7 @@ class WebSocket extends EventListener {
   static CLOSING = 2;
   static CLOSED = 3;
 
+  static isUseJest = true;
   static mock = new Mock();
 
   constructor(url, protocols) {
@@ -17,6 +18,27 @@ class WebSocket extends EventListener {
     this.readyState = WebSocket.CONNECTING;
 
     WebSocket.mock.addInstance(this);
+
+    if (WebSocket.isUseJest && jest) {
+      this.send = jest.fn(this.send.bind(this));
+      this.close = jest.fn(this.close.bind(this));
+    }
+  }
+
+  open(...args) {
+    this.readyState = WebSocket.OPEN;
+    this.dispatchEvent('open', ...args);
+  }
+  send() {
+    const { readyState } = this;
+    if (readyState === WebSocket.CLOSING || readyState === WebSocket.CLOSED) {
+      throw new Error('WebSocket is already in CLOSING or CLOSED state');
+    }
+  }
+  close(...args) {
+    this.readyState = WebSocket.CLOSING;
+    this.dispatchEvent('close', ...args);
+    this.readyState = WebSocket.CLOSED;
   }
 }
 
