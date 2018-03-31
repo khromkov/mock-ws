@@ -23,6 +23,11 @@ class WebSocket extends EventListener {
       this.send = jest.fn(this.send.bind(this));
       this.close = jest.fn(this.close.bind(this));
     }
+
+    this.onopen = undefined;
+    this.onmessage = undefined;
+    this.onerror = undefined;
+    this.onclose = undefined;
   }
 
   open(...args) {
