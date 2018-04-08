@@ -51,5 +51,8 @@
       "./node_modules/.bin/eslint --no-ignore --fix",
       "git add --force"
     ]
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

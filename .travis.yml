@@ -1,6 +1,24 @@
 language: node_js
 node_js:
-  - '8'
-script:
-  yarn test:coverage
-after_success: 'yarn run coveralls'
+- '8'
+script: yarn test:coverage
+after_success: yarn run coveralls
+before_deploy: |
+  function npm_dist_tag() {
+    TAG=`expr "$TRAVIS_TAG" : '.*-\(.*\)\..*'`
+    if [[ -z $TAG ]]
+    then
+        echo "latest"
+    else
+        echo $TAG
+    fi
+  }
+deploy:
+  provider: npm
+  skip_cleanup: true
+  tag: "$(npm_dist_tag)"
+  on:
+    tags: true
+  email: khromkov@gmail.com
+  api_key:
+    secure: OCjBsOU5FpurUmMoQwddrctqV7oq8rUs7OBVFFBsaNWebb16DHpFY8xiM9OECDkt2YLdCpEWnWgIFJ/LWPowu2gYEvuaIdseO61dglb2X9BHI+tAUmiG2nwgkHV1c6X2LmW8uNIfhpguRVebzVFceL6MXEWqXwx8D170Qe60m5Oito6V5/s8DMTpirAP9Hj3zRnJxUd5sUkhd41cVzMelVM2K1KlC9RZjD38TtYp/yarTdlp9lfKQnyF9XzeLUVp0woQuin00wyLv+zQIrYD6n4yqVreo2+nEDsTR9eKZvGnvJfbVVxnJZg4cefXi5wwxyOw4D2OPdKBKdiKYe0OVNV5R+mEbzlVmSOkbkPhQ8314YWKBBtxhmDWiPUKEKe4ULCnDn0QbkQ4hPZz5o26oBPw9Ac6qGf1e/WQ6GADIlsA/VKxCbFFBlIQjxkPomgY0M0r5O6LJnUhGc5S2IREcONnBGqJ9zLZbOwxmcbYXnqQTUkCyjflVfeBC/NbFtEtzXU3iu5u01yNp4uYXo3gIaTjuucQ1ZqmG/r74m2FAJyTJxaifMV2PaC/xv1ahgY2ePIg7UfHMODy4l3pDeGv73HoqM5KWoCwaCC0LuXVbLrKqvBWHi+nUkVRIaHwU7HQDlY67kBRIdK+PH9sfg0e5Vwf9YRywg5JSaGV0VVsmCk=
