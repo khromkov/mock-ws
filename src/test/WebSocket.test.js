@@ -2,6 +2,28 @@ import WebSocket from '../index';
 
 global.WebSocket = WebSocket;
 
+const WEBSOCKET_KEYS = [
+  'CONNECTING',
+  'OPEN',
+  'CLOSING',
+  'CLOSED',
+  'url',
+  'readyState',
+  'bufferedAmount',
+  'onopen',
+  'onerror',
+  'onclose',
+  'extensions',
+  'protocol',
+  'onmessage',
+  'binaryType',
+  'close',
+  'send',
+  'addEventListener',
+  'removeEventListener',
+  'dispatchEvent',
+];
+
 describe('WebSocket', () => {
   afterEach(() => {
     WebSocket.mock.clear();
@@ -12,6 +34,20 @@ describe('WebSocket', () => {
     expect(WebSocket.mock.instances).toHaveLength(1);
     expect(WebSocket.mock.instances[0].url).toBe('url');
     expect(ws.readyState).toBe(WebSocket.CONNECTING);
+  });
+
+  test('instances keys', () => {
+    const ws = new WebSocket('url');
+    WEBSOCKET_KEYS.forEach(key => {
+      expect(ws[key]).toBeDefined();
+    });
+  });
+
+  test('reassign "on" event handle props', () => {
+    const ws = new WebSocket('url');
+    expect(ws.onmessage).toBeNull();
+    ws.onmessage = 2;
+    expect(ws.onmessage).toBeNull();
   });
 
   test('open', () => {
@@ -25,8 +61,11 @@ describe('WebSocket', () => {
 
   test('close', () => {
     const ws = new WebSocket('url');
-    const onclose = jest.fn(() => {
-      expect(ws.readyState).toBe(WebSocket.CLOSING);
+    const onclose = jest.fn(event => {
+      expect(ws.readyState).toBe(WebSocket.CLOSED);
+      expect(event.wasClean).toBe(true);
+      expect(event.reason).toBe('');
+      expect(event.code).toBe(1000);
     });
     ws.onclose = onclose;
     ws.close();
@@ -50,5 +89,14 @@ describe('WebSocket', () => {
     expect(ws.close.mock).toBe(undefined);
     ws.send();
     ws.close();
+  });
+
+  test('binaryType', () => {
+    const ws = new WebSocket('url');
+    expect(ws.binaryType).toBe('blob');
+    ws.binaryType = 'test';
+    expect(ws.binaryType).toBe('blob');
+    ws.binaryType = 'arraybuffer';
+    expect(ws.binaryType).toBe('arraybuffer');
   });
 });
